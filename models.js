@@ -12,15 +12,19 @@ const blogPostSchema = mongoose.Schema({
         required: true
     },
     author: {
-        type: String,
+        firstName: String,
+        lastName: String,
         required: true
     },
     // the `address` property is an object
-    publishDate: {
+    created: {
         type: String,
     }
 });
 
+blogPostSchema.virtual('authorName').get(function () {
+    return `${this.author.firstName} ${this.author.lastName}`.trim()
+});
 //function StorageException(message) {
 //    this.message = message;
 //    this.name = "StorageException";
@@ -89,8 +93,8 @@ blogPostSchema.methods.apiRepr = function () {
         id: this._id,
         title: this.title,
         content: this.content,
-        author: this.author,
-        publishDate: this.publishDate
+        author: this.authorName,
+        created: this.created
     };
 }
 
