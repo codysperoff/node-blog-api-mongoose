@@ -8,22 +8,24 @@ const blogPostSchema = mongoose.Schema({
         required: true
     },
     content: {
-        type: String,
-        required: true
+        type: String
     },
     author: {
         firstName: String,
-        lastName: String,
-        required: true
+        lastName: String
     },
-    // the `address` property is an object
     created: {
-        type: String,
+        type: Date,
+        default: Date.now
     }
+}, {
+    collection: 'blog-posts'
 });
 
+
+
 blogPostSchema.virtual('authorName').get(function () {
-    return `${this.author.firstName} ${this.author.lastName}`.trim()
+    return `${this.author.firstName} ${this.author.lastName}`.trim();
 });
 
 

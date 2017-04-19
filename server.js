@@ -1,13 +1,14 @@
+const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const express = require('express');
 const morgan = require('morgan');
 
 const app = express();
 
-const newBlogPostsRouter = require('./newBlogPostsRouter');
-const deleteBlogPostsRouter = require('./deleteBlogPostsRouter');
+//const newBlogPostsRouter = require('./newBlogPostsRouter');
+//const deleteBlogPostsRouter = require('./deleteBlogPostsRouter');
 
-mongoose.Promise = global.Promise;
+
 
 const {
     PORT,
@@ -19,21 +20,24 @@ const {
 
 // log the http layer
 app.use(morgan('common'));
-//
+app.use(bodyParser.json());
+
+mongoose.Promise = global.Promise;
+
 app.use(express.static('public'));
 
-app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/views/index.html');
-});
+//app.get('/', (req, res) => {
+//    res.sendFile(__dirname + '/views/index.html');
+//});
 
 
 // when requests come into '/blog-posts' or
 // '/blog-posts/:id', we'll route them to the express
 // router instances we've imported. Remember,
 // these router instances act as modular, mini-express apps.
-app.use(bodyParser.json());
-app.use('/blog-posts', newBlogPostsRouter);
-app.use('/blog-posts', deleteBlogPostsRouter);
+
+//app.use('/blog-posts', newBlogPostsRouter);
+//app.use('/blog-posts', deleteBlogPostsRouter);
 
 app.get('/posts', (req, res) => {
     //allows users to limit GET requests by title, content, author or date published.
@@ -55,9 +59,9 @@ app.get('/posts', (req, res) => {
         // success callback: for each blog post we got back, we'll
         // call the `.apiRepr` instance method we've created in
         // models.js in order to only expose the data we want the API return.
-        .then(BlogPosts => res.json(
-            BlogPosts.map(post => post.apiRepr());
-        ))
+        .then(BlogPosts => {
+            res.json(BlogPosts.map(post => post.apiRepr()));
+        })
         .catch(
             err => {
                 console.error(err);
@@ -223,6 +227,6 @@ module.exports = {
     closeServer
 };
 
-app.listen(process.env.PORT || 8080, () => {
-    console.log(`Your app is listening on port ${process.env.PORT || 8080}`);
+app.listen(3000, () => {
+    console.log(`Your app is listening on port 3000`);
 });
